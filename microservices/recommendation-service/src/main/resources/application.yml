@@ -10,3 +10,12 @@ logging:
  level:
   root: INFO
   com.david.microservices.alpha: DEBUG
+
+---
+spring:
+ config:
+  activate:
+   on-profile: docker
+
+server:
+ port: 8080
