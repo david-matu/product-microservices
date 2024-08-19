@@ -20,5 +20,10 @@ Created Aug 9, 2024
 * Updated the test script to start the landscape for testing and tear down the landscape after tests
 `./test-em-all.bash start stop`
 
+##### Aug 19, 2024
+* Added API Documentation
+	Build and start the landscape:
+	`./gradlew build && docker compose build && docker compose up -d`
+	The doc will be accessible via [http://localhost:8080/openapi/swagger-ui.html](http://localhost:8080/openapi/swagger-ui.html)
 
 

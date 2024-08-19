@@ -19,7 +19,28 @@ app:
   host: localhost
   port: 7003
 
+api:
+ common:
+  title: Product Service API
+  description: This is a Product Service (demo) API where a group of cooperating microservices are aggregated to return information about a given product
+  version: 1.0.0
+  termsOfService: https://david-matu.github.io/alpha-microservices/terms-of-service
+  license: General Usage License
+  licenseUrl: https://david-matu.github.io/alpha-microservices/license
+  externalDocDesc: Find out the public info about this API
+  externalDocUrl: https://david-matu.github.io/alpha-microservices
+  contact:
+   name: David Matu
+   url: https://david-matu.github.io
+   email: davidmatu817@gmail.com 
+   
 
+springdoc:
+ swagger-ui.path: /openapi/swagger-ui.html
+ api-docs.path: /openapi/v3/api-docs
+ packagesToScan: com.david.microservices.alpha.composite.product
+ pathsToMatch: /**
+ 
 ---
 spring:
  config.activate.on-profile: docker
