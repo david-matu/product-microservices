@@ -2,6 +2,7 @@ package com.david.microservices.alpha.util.http;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.david.microservices.alpha.api.exceptions.BadRequestException;
 import com.david.microservices.alpha.api.exceptions.InvalidInputException;
 import com.david.microservices.alpha.api.exceptions.NotFoundException;
 
@@ -33,6 +35,11 @@ public class GlobalControllerExceptionHandler {
 		return createHttpErrorInfo(UNPROCESSABLE_ENTITY, request, ex);
 	}
 	
+	@ResponseStatus(BAD_REQUEST)
+	@ExceptionHandler(BadRequestException.class)
+	public @ResponseBody HttpErrorInfo handleBadRequestException(ServerHttpRequest request, BadRequestException ex) {
+		return createHttpErrorInfo(BAD_REQUEST, request, ex);
+	}
 
 	private HttpErrorInfo createHttpErrorInfo(HttpStatus httpStatus, ServerHttpRequest request, Exception ex) {
 		
