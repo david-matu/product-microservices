@@ -1,5 +1,19 @@
 spring:
  application.name: review-service
+ # Set the following property to "none" or "validate" in a prod environment
+ jpa:
+  hibernate:
+   ddl-auto: update
+  
+  properties: 
+   hibernate.dialect: org.hibernate.dialect.MySQLDialect
+ 
+ datasource:
+  url: jdbc:mysql://localhost/review-db
+  username: user
+  password: mypwd
+  # Wait for 60 seconds during startup to establish db connection
+  hikari.initializationFailTimeout: 60000
  
 server:
  port: 7003
@@ -10,12 +24,16 @@ logging:
  level:
   root: INFO
   com.david.microservices.alpha: DEBUG
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  
 
 ---
 spring:
- config:
-  activate:
-   on-profile: docker
-
+ config.activate.on-profile: docker
+ 
+ datasource: 
+  url: jdbc:mysql://mysql/review-db
+ 
 server:
  port: 8080
