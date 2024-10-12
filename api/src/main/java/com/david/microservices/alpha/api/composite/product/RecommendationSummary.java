@@ -1,10 +1,17 @@
 package com.david.microservices.alpha.api.composite.product;
 
 public class RecommendationSummary {
-	private int recommendationId;
-	private String author;
-	private int rate;
-	private String content;
+	private final int recommendationId;
+	private final String author;
+	private final int rate;
+	private final String content;
+	
+	public RecommendationSummary() {
+		this.recommendationId = 0;
+		this.author = null;
+		this.rate = 0;
+		this.content = null;
+	}
 	
 	public RecommendationSummary(int recommendationId, String author, int rate, String content) {
 		this.recommendationId = recommendationId;
@@ -17,6 +24,7 @@ public class RecommendationSummary {
 		return content;
 	}
 
+	/*
 	public void setContent(String content) {
 		this.content = content;
 	}
@@ -32,7 +40,8 @@ public class RecommendationSummary {
 	public void setRate(int rate) {
 		this.rate = rate;
 	}
-
+	*/
+	
 	public int getRecommendationId() {
 		return recommendationId;
 	}

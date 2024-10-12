@@ -14,6 +14,13 @@ public class ServiceAddresses {
 		this.rec = null;
 	}
 	
+	/**
+	 * 
+	 * @param compositeAddress
+	 * @param productAddress
+	 * @param reviewAddress
+	 * @param recommendationAddress
+	 */
 	public ServiceAddresses(String compositeAddress, String productAddress, String reviewAddress, String recommendationAddress) {
 		this.cmp = compositeAddress;
 		this.pro = productAddress;

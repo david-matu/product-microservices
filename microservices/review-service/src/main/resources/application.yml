@@ -6,10 +6,12 @@ spring:
    ddl-auto: update
   
   properties: 
-   hibernate.dialect: org.hibernate.dialect.MySQLDialect
- 
+   hibernate:
+    dialect: org.hibernate.dialect.MySQLDialect
+    boot.allow_jdbc_metadata_access: false
+   
  datasource:
-  url: jdbc:mysql://localhost/review-db
+  url: jdbc:mysql://localhost/review_db
   username: user
   password: mypwd
   # Wait for 60 seconds during startup to establish db connection
@@ -32,8 +34,7 @@ logging:
 spring:
  config.activate.on-profile: docker
  
- datasource: 
-  url: jdbc:mysql://mysql/review-db
+ datasource.url: jdbc:mysql://mysql/review_db
  
 server:
  port: 8080
