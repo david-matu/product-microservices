@@ -25,7 +25,7 @@ Created Aug 9, 2024
 
 * Build and start the landscape:
 ```sh
-`./gradlew build && docker compose build && docker compose up -d`
+./gradlew build && docker compose build && docker compose up -d
 ```
 	
 The api doc will be accessible via [http://localhost:8080/openapi/swagger-ui.html](http://localhost:8080/openapi/swagger-ui.html)
