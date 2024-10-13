@@ -22,8 +22,15 @@ Created Aug 9, 2024
 
 ##### Aug 19, 2024
 * Added API Documentation
-	Build and start the landscape:
-	`./gradlew build && docker compose build && docker compose up -d`
-	The doc will be accessible via [http://localhost:8080/openapi/swagger-ui.html](http://localhost:8080/openapi/swagger-ui.html)
+
+* Build and start the landscape:
+```sh
+`./gradlew build && docker compose build && docker compose up -d`
+```
+	
+The api doc will be accessible via [http://localhost:8080/openapi/swagger-ui.html](http://localhost:8080/openapi/swagger-ui.html)
+
+##### Continuation:
+This documentation is continued in [the README](https://github.com/david-matu/Microservices-Diary/blob/main/README.md) file of the __Microservices-Diary__ documentation project.
 
 
