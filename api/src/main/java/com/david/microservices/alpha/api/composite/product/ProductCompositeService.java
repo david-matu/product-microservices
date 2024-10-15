@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import reactor.core.publisher.Mono;
 
 public interface ProductCompositeService {
 	
@@ -30,7 +31,7 @@ public interface ProductCompositeService {
 			@ApiResponse(responseCode = "422", description = "${api.responseCodes.unprocessableEntity.description}")
 	})
 	@GetMapping(value = "/product-composite/{productId}", produces = "application/json")
-	ProductAggregate getProduct(@PathVariable int productId);
+	Mono<ProductAggregate> getProduct(@PathVariable int productId);
 	
 	
 	@Operation(summary = "${api.product-composite.create-composite-product.description}", description = "${api.product-composite.create-composite-product.notes}")
@@ -39,10 +40,10 @@ public interface ProductCompositeService {
 			@ApiResponse(responseCode = "422", description = "${api.responseCodes.unprocessableEntity.description}")
 	})
 	@PostMapping(value = "/product-composite", consumes = "application/json")
-	void createProduct(@RequestBody ProductAggregate body);
+	Mono<Void> createProduct(@RequestBody ProductAggregate body);
 	
 	@Operation(summary = "${api.product-composite.delete-product-composite.description}", description = "${api.product-composite.delete-product-composite.notes}")
 	@DeleteMapping(value = "/product-composite/{productId}")
-	void deleteProduct(@PathVariable int productId);
+	Mono<Void> deleteProduct(@PathVariable int productId);
 	
 }

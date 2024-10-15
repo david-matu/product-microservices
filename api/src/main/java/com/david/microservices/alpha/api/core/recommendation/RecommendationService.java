@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 public interface RecommendationService {
 	
 	/**
@@ -17,11 +20,11 @@ public interface RecommendationService {
 	 * @return the recommendations of the product
 	 */
 	@GetMapping(value= "/recommendations", produces = "application/json")
-	List<Recommendation> getRecommendations(@RequestParam(value = "productId", required = true) int productId);
+	Flux<Recommendation> getRecommendations(@RequestParam(value = "productId", required = true) int productId);
 	
 	@PostMapping(value = "/recommendations", consumes = "application/json", produces = "application/json")
-	Recommendation createRecommendation(@RequestBody Recommendation body);
+	Mono<Recommendation> createRecommendation(@RequestBody Recommendation body);
 	
 	@DeleteMapping(value = "/recommendations")
-	void deleteRecommendations(@RequestParam(value = "productId", required = true) int productId);
+	Mono<Void> deleteRecommendations(@RequestParam(value = "productId", required = true) int productId);
 }

@@ -23,6 +23,7 @@ jar {
 
 ext {
 	mapstructVersion = "1.5.3.Final"
+	springCloudVersion = "2022.0.1"
 }
 
 dependencies {
@@ -45,11 +46,20 @@ dependencies {
 	
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	
+	implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+	
 	// Use Testcontainers and its support for JUnit5 to enable use of MongoDB when running automated integration tests 
 	implementation platform('org.testcontainers:testcontainers-bom:1.15.2')
 	testImplementation 'org.testcontainers:testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:mongodb'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 tasks.named('test') {
