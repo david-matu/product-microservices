@@ -35,11 +35,21 @@ The doc will be accessible via [http://localhost:8080/openapi/swagger-ui.html](h
 This documentation is continued in [the README](https://github.com/david-matu/Microservices-Diary/blob/main/README.md) file of the __Microservices-Diary__ documentation project.
 
 ##### Nov 3, 2024
-Added message processors (consumers) for Recommendation and Review microservices. 
+* Added message processors (consumers) for Recommendation and Review microservices. 
+    
+    Messages can be seen in the RabbitMQ at:
+    [http://localhost:15672](http://localhost:15672/)
 
-Messages can be seen in the RabbitMQ at:
-[http://localhost:15672](http://localhost:15672/)
+    Username and password: ``guest``/``guest``
+    
+* Added Health API in the composite
+    * Added as a bean that calls the core services health endpoints:
+    * Access via [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
+    
+    * For the core services:
+        - Product: [http://localhost:7002/actuator/health](http://localhost:7001/actuator/health)
+        - Recommendation: [http://localhost:7002/actuator/health](http://localhost:7002/actuator/health)
+        - Review: [http://localhost:7002/actuator/health](http://localhost:7003/actuator/health)
 
-Username and password: ``guest``/``guest``
 
 

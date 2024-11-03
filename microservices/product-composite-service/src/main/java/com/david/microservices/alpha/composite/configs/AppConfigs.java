@@ -1,8 +1,17 @@
 package com.david.microservices.alpha.composite.configs;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.CompositeReactiveHealthContributor;
+import org.springframework.boot.actuate.health.ReactiveHealthContributor;
+import org.springframework.boot.actuate.health.ReactiveHealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.david.microservices.alpha.composite.product.services.ProductCompositeIntegration;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -12,6 +21,9 @@ import io.swagger.v3.oas.models.info.License;
 
 @Configuration
 public class AppConfigs {
+	
+	@Autowired
+	ProductCompositeIntegration integration;
 	
 	@Value("${api.common.title}") String apiTitle;
 	@Value("${api.common.description}") String apiDescription;
@@ -45,4 +57,16 @@ public class AppConfigs {
 							.url(apiExternaDocUrl));
 					
 	}
+	
+	@Bean
+	ReactiveHealthContributor coreServices() {
+		final Map<String, ReactiveHealthContributor> registry = new LinkedHashMap<>();
+		
+		registry.put("product", (ReactiveHealthIndicator) () -> integration.getProductHealth());
+		registry.put("recommendation", (ReactiveHealthIndicator) () -> integration.getRecommendationHealth());
+		registry.put("review", (ReactiveHealthIndicator) () -> integration.getReviewHealth());
+		
+		return CompositeReactiveHealthContributor.fromMap(registry);
+	}
+	
 }

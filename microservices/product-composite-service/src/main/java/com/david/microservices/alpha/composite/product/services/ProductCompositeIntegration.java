@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.Message;
@@ -46,6 +47,10 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 	private final String productServiceUrl;
 	private final String recommendationServiceUrl;
 	private final String reviewServiceUrl;
+	
+	private final String productServiceBaseUrl;
+	private final String recommendationServiceBaseUrl;
+	private final String reviewServiceBaseUrl;
 	
 	private final WebClient webClient;
 	
@@ -82,8 +87,13 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 		this.streamBridge = streamBridge;
 		
 		this.productServiceUrl = "http://" + productServiceHost + ":" + productServicePort + "/product";
+		this.productServiceBaseUrl = "http://" + productServiceHost + ":" + productServicePort;
+		
 		this.recommendationServiceUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort + "/recommendations?productId=";
+		this.recommendationServiceBaseUrl = "http://" + recommendationServiceHost + ":" + recommendationServicePort;
+		
 		this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/reviews?productId=";
+		this.reviewServiceBaseUrl = "http://" + reviewServiceHost + ":" + reviewServicePort;
 	}
 
 	@Override
@@ -240,4 +250,32 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 		return Mono.fromRunnable(() -> sendMessage("recommendations-out-0", new Event(DELETE, productId, null)))
 				.subscribeOn(publishEventScheduler).then();
 	}
+	
+	public Mono<Health> getProductHealth() {
+		return getHealth(productServiceBaseUrl);
+	}
+	
+	public Mono<Health> getRecommendationHealth() {
+		return getHealth(recommendationServiceBaseUrl);
+	}
+	
+	public Mono<Health> getReviewHealth() {
+		return getHealth(reviewServiceBaseUrl);
+	}
+	
+	private Mono<Health> getHealth(String url) {
+		url += "/actuator/health";
+		
+		LOG.debug("Will call the Health API on URL: {}", url);
+		
+		return webClient.get()
+				.uri(url)
+				.retrieve()
+				.bodyToMono(String.class)
+				.map(s -> new Health.Builder().up().build())
+				.onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()))
+				.log(LOG.getName(), FINE);
+	}
 }
+
+
