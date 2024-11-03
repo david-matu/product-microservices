@@ -104,7 +104,7 @@ spring.cloud.stream:
    destination: products
    producer:
     required-groups: auditGroup
-  recommendatins-out-0:
+  recommendations-out-0:
    destination: recommendations
    producer:
     required-groups: auditGroup

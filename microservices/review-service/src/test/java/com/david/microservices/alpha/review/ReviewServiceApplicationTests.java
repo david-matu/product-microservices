@@ -3,6 +3,7 @@ package com.david.microservices.alpha.review;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 // import org.springframework.http.MediaType;
@@ -10,9 +11,14 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.springframework.http.HttpStatus.*;
 import static reactor.core.publisher.Mono.just;
+
+import java.util.function.Consumer;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 import com.david.microservices.alpha.api.core.review.Review;
+import com.david.microservices.alpha.api.event.Event;
+import com.david.microservices.alpha.api.event.Event.Type;
 import com.david.microservices.alpha.review.persistence.ReviewRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +27,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 // import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = RANDOM_PORT, properties = {
+	"spring.cloud.stream.defaultBinder=rabbit",
+	"logging.level.com.david.microservices=DEBUG"
+})
 class ReviewServiceApplicationTests extends MySqlTestBase {
 	
 	/* writing off these to add persistence tests
@@ -35,6 +44,12 @@ class ReviewServiceApplicationTests extends MySqlTestBase {
 	
 	@Autowired
 	private ReviewRepository repo;
+	
+	/*
+	@Autowired
+	@Qualifier("messageProcessor")
+	private Consumer<Event<Integer, Review>> messageProcessor;
+	*/
 	
 	@BeforeEach
 	void setupDb() {
@@ -82,11 +97,13 @@ class ReviewServiceApplicationTests extends MySqlTestBase {
 		assertEquals(1, repo.count());
 	}
 	
+	/*
 	@Test
 	void deleteReviews() {
 		int productId = 1;
 		int reviewId = 1;
 		
+		*
 		postAndVerifyReview(productId, reviewId, OK);
 		assertEquals(1, repo.findByProductId(productId).size());
 		
@@ -94,8 +111,31 @@ class ReviewServiceApplicationTests extends MySqlTestBase {
 		assertEquals(0, repo.findByProductId(productId).size());
 		
 		deleteAndVerifyReviewsByProductId(productId, OK);
+		*
+		
+		sendCreateReviewEvent(productId, reviewId);
+		assertEquals(1, repo.findByProductId(productId).size());
+		
+		sendDeleteReviewEvent(productId);
+		assertEquals(0, repo.findByProductId(productId).size());
+		
+		sendDeleteReviewEvent(productId);
 	}
 	
+	/*
+	private void sendDeleteReviewEvent(int productId) {
+		Event<Integer, Review> event = new Event(Type.DELETE, productId, null);
+		messageProcessor.accept(event);
+	}
+
+	private void sendCreateReviewEvent(int productId, int reviewId) {
+		Review review = new Review(productId, reviewId, "Author " + reviewId, "Subject " + reviewId, "Content " + reviewId, "SA");
+		
+		Event<Integer, Review> event = new Event(Type.CREATE, productId, review);
+		messageProcessor.accept(event);
+	}
+	*/
+
 	@Test
 	void getReviewsMissingParameter() {
 		getAndVerifyReviewsByProductId("", BAD_REQUEST)

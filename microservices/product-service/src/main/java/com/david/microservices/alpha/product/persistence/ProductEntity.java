@@ -66,4 +66,10 @@ public class ProductEntity {
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
+
+	@Override
+	public String toString() {
+		return "ProductEntity [id=" + id + ", version=" + version + ", productId=" + productId + ", name=" + name
+				+ ", weight=" + weight + "]";
+	}
 }
