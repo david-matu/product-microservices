@@ -47,9 +47,9 @@ This documentation is continued in [the README](https://github.com/david-matu/Mi
     * Access via [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
     
     * For the core services:
-        - Product: [http://localhost:7002/actuator/health](http://localhost:7001/actuator/health)
+        - Product: [http://localhost:7001/actuator/health](http://localhost:7001/actuator/health)
         - Recommendation: [http://localhost:7002/actuator/health](http://localhost:7002/actuator/health)
-        - Review: [http://localhost:7002/actuator/health](http://localhost:7003/actuator/health)
+        - Review: [http://localhost:7003/actuator/health](http://localhost:7003/actuator/health)
 
 
 

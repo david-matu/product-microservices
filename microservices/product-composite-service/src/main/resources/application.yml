@@ -96,6 +96,18 @@ springdoc:
  pathsToMatch: /**
  
 
+app.eureka-server: localhost
+
+eureka:
+ client:
+  serviceUrl:
+   defaultZone: http://${app.eureka-server}:8761/eureka/
+  initialInstanceInfoReplicationIntervalSeconds: 5
+  registryFetchIntervalSeconds: 5
+ instance: 
+  leaseRenewalIntervalInSeconds: 5
+  leaseExpirationDurationInSeconds: 5
+
 spring.cloud.stream:
  defaultBinder: rabbit
  default.contentType: application/json
@@ -148,6 +160,8 @@ app:
  review-service:
   host: review
   port: 8080
+  
+ eureka-server: eureka
 
 spring.rabbitmq.host: rabbitmq
 
