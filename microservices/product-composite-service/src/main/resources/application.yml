@@ -2,7 +2,11 @@ server:
  port: 7000
  error.include-message: always
  
-spring.application.name: product-composite-service
+spring.application.name: product-composite
+
+# Enable the service to produce the correct server url when behind an edge server
+# to present  Swagger UI
+server.forward-headers-strategy: framework
 
 # This configuration (below) will be replaced by a service discovery mechanism
 app:
@@ -17,18 +21,23 @@ app:
  review-service:
   host: localhost
   port: 7003
+ auth-server: localhost
+
+# Dec 3, 2024
+#spring.security.oauth2.resourceserver.jwt.issuer-uri: http://${app.auth-server}:9999
+spring.security.oauth2.resourceserver.jwt.issuer-uri: https://dev-ww47b0brrhicfeqm.us.auth0.com/
 
 api:
  common:
   title: Product Service API
-  description: This is a Product Service (demo) API where a group of cooperating microservices are aggregated to return information about a given product
+  description: This is a Product Service (demo) API where a group of co-operating microservices are aggregated to return information about a given product
   version: 1.0.0
   
   termsOfService: https://david-matu.github.io/alpha-microservices/terms-of-service
   license: General Usage License
   licenseUrl: https://david-matu.github.io/alpha-microservices/license
   
-  externalDocDesc: Find out the public info about this API
+  externalDocDesc: For public information on this API
   externalDocUrl: https://david-matu.github.io/alpha-microservices
   
   contact:
@@ -94,14 +103,26 @@ springdoc:
  api-docs.path: /openapi/v3/api-docs
  packagesToScan: com.david.microservices.alpha.composite.product
  pathsToMatch: /**
+ cache.disabled: true
  
+ swagger-ui:
+  oauth2-redirect-url: /swagger-ui/oauth2-redirect.html
+  oauth:
+   clientId: writer
+   clientSecret: secret-writer
+   useBasicAuthenticationWithAccessCodeGrant: true
+ oAuthFlow:
+  authorizationUrl: https://localhost:8443/oauth2/authorize
+  tokenUrl: https://localhost:8443/oauth2/token
 
 app.eureka-server: localhost
+app.eureka-username: user
+app.eureka-password: pwd
 
 eureka:
  client:
   serviceUrl:
-   defaultZone: http://${app.eureka-server}:8761/eureka/
+   defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
   initialInstanceInfoReplicationIntervalSeconds: 5
   registryFetchIntervalSeconds: 5
  instance: 
@@ -139,7 +160,8 @@ logging:
  level:
   root: INFO
   com.david.microservices.alpha: DEBUG
-  
+  org.springframework.web.server.adapter.HttpWebHandlerAdapter: TRACE
+
 management.endpoint.health.show-details: "ALWAYS"
 management.endpoints.web.exposure.include: "*"
 
@@ -162,6 +184,7 @@ app:
   port: 8080
   
  eureka-server: eureka
+ auth-server: auth-server
 
 spring.rabbitmq.host: rabbitmq
 

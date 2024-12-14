@@ -8,7 +8,8 @@ group = 'com.david.microservices.alpha.composite'
 version = '1.0.0-SNAPSHOT'
 
 ext {
-	springCloudVersion = "2022.0.1"
+	// springCloudVersion = "2022.0.1"
+	springCloudVersion = "2023.0.3"
 }
 
 java {
@@ -34,6 +35,13 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
 	
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	
+	// Dec 3, 2024
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-oauth2-resource-server'
+	implementation 'org.springframework.security:spring-security-oauth2-jose'
+	
+	// ----- ^ Dec 3
 	
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
 	// testImplementation 'org.springframework.cloud:spring-cloud-stream::test-binder'

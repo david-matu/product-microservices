@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+TENANT=dev-ww47b0brrhicfeqm.us.auth0.com
+MGM_CLIENT_ID=PgSUVsHEhBOUmpBT7GRfQtezi5XiezUU
+MGM_CLIENT_SECRET=wfirkMlJlOKSk4yr8vkYZqgtFlxlgXauucGNEOlhAMpvQhl9ZUPy9zgEloPJkV8f
+USER_EMAIL=davidndirangu817@gmail.com
+USER_PASSWORD=2024Dave123

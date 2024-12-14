@@ -1,6 +1,10 @@
-spring.application.name: eureka-server
+spring.application.name: eureka
 
 server.port: 8761
+
+app:
+ eureka-username: user
+ eureka-password: pwd
 
 eureka:
  instance:
@@ -10,7 +14,7 @@ eureka:
   # registerWithEureka: false
   fetchRegistry: false
   serviceUrl:
-   defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+   defaultZone: http://${app.eureka-username}:${app.eureka-password}@${eureka.instance.hostname}:${server.port}/eureka/
   
   # see: https://github.com/spring-cloud-samples/eureka/blob/master/src/main/resources/application.yml
  server:
@@ -18,4 +22,4 @@ eureka:
   waitTimeInMsWhenSyncEmpty: 0
   response-cache-update-interval-ms: 5000
    
-management.endpoints.web.exposure.include: *
+management.endpoints.web.exposure.include: "*"

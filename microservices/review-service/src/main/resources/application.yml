@@ -1,5 +1,5 @@
 spring:
- application.name: review-service
+ application.name: review
  # Set the following property to "none" or "validate" in a prod environment
  jpa:
   hibernate:
@@ -20,7 +20,21 @@ spring:
 server:
  port: 7003
  error.include-message: always
- 
+
+app.eureka-server: localhost 
+app.eureka-username: user
+app.eureka-password: pwd
+
+eureka:
+ client:
+  serviceUrl:
+   defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
+   initialInstanceInfoReplicationIntervalSeconds: 5
+   registryFetchIntervalSeconds: 5
+   
+  instance:
+   leaseRenewalIntervalInSeconds: 5
+   leaseExpirationDurationInSeconds: 5
 
 logging:
  level:
@@ -64,9 +78,9 @@ spring.rabbitmq.host: rabbitmq
 
 # spring.cloud.stream.kafka.binders.brokers: kafka
 
-server:
- port: 8080
+server.port: 8080
 
+app.eureka-server: eureka
 
 ---
 spring.config.activate.on-profile: streaming_partitioned

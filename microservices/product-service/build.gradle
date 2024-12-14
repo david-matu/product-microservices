@@ -23,7 +23,8 @@ jar {
 
 ext {
 	mapstructVersion = "1.5.3.Final"
-	springCloudVersion = "2022.0.1"
+	// springCloudVersion = "2022.0.1"
+	springCloudVersion = "2023.0.3"
 }
 
 dependencies {

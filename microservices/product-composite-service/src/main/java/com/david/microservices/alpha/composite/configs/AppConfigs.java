@@ -58,6 +58,7 @@ public class AppConfigs {
 					
 	}
 	
+	/*
 	@Bean
 	ReactiveHealthContributor coreServices() {
 		final Map<String, ReactiveHealthContributor> registry = new LinkedHashMap<>();
@@ -68,5 +69,6 @@ public class AppConfigs {
 		
 		return CompositeReactiveHealthContributor.fromMap(registry);
 	}
+	*/
 	
 }
