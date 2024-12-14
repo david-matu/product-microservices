@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-TENANT=dev-ww47b0brrhicfeqm.us.auth0.com
-MGM_CLIENT_ID=PgSUVsHEhBOUmpBT7GRfQtezi5XiezUU
-MGM_CLIENT_SECRET=wfirkMlJlOKSk4yr8vkYZqgtFlxlgXauucGNEOlhAMpvQhl9ZUPy9zgEloPJkV8f
-USER_EMAIL=davidndirangu817@gmail.com
-USER_PASSWORD=2024Dave123
+TENANT=-tenant-create-yours-at.us.auth0.com
+MGM_CLIENT_ID=xg6jwriter9client9id9ja41jCr
+MGM_CLIENT_SECRET=PKmE2writer9client9secret9UzIUCQMN3OImUMJ
+USER_EMAIL=you-email-as-you-had-set-up-auth0@youremailprovider.com
+USER_PASSWORD=test-user-email-password
