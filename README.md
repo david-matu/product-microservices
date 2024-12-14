@@ -77,6 +77,7 @@ curl -X POST https://$TENANT/oauth/token \
 -d client_secret=$WRITER_CLIENT_SECRET
 ```
 
+    
     - __Authorization Code Grant__
     First, get the code by entering the following in the browser:
     
