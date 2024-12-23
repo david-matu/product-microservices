@@ -1,0 +1,86 @@
+server:
+ port: 7002
+ error.include-message: always
+
+spring:
+ application.name: recommendation
+ 
+ data.mongodb:
+  host: localhost
+  port: 27017
+  database: recommendation_db 
+  
+spring.cloud.function.definition: messageProcessor
+
+spring.cloud.stream:
+ defaultBinder: rabbit
+ default.contentType: application/json
+ bindings.messageProcessor-in-0:
+  destination: recommendations
+  group: auditGroup
+  
+spring.cloud.stream.bindings.messageProcessor-0-consumer:
+ maxAttempts: 3
+ backOffInitialInterval: 500
+ backOffMaxInterval: 100
+ backOffMultiplier: 2.0
+ 
+spring.cloud.stream.rabbit.bindings.messageProcessor-0-consumer:
+ autoBindDlq: true
+ republishToDlq: true
+
+# in common config: application.yml
+#spring.rabbitmq:
+# host: 127.0.0.1
+# port: 5672
+# username: guest
+# password: guest
+
+logging:
+ level:
+  root: INFO
+  com.david.microservices.alpha: DEBUG
+  org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+
+management.endpoint.health.show-details: "ALWAYS"
+management.endpoints.web.exposure.include: "*"
+
+---
+spring:
+ config.activate.on-profile: docker
+ 
+ data.mongodb.host: mongodb
+ 
+spring.rabbitmq.host: rabbitmq
+
+# spring.cloud.stream.kafka.binders.brokers: kafka
+
+server.port: 8080
+
+#app.eureka-server: eureka
+ 
+---
+spring.config.activate.on-profile: streaming_partitioned
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer:
+  partitioned: true
+  instanceCount: 2
+
+---
+spring.config.activate.on-profile: streaming_instance_0
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer.instanceIndex: 0
+
+---
+spring.config.activate.on-profile: streaming_instance_1
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer.instanceIndex: 1
+
+---
+spring.config.activate.on-profile: kafka
+
+management.health.rabbit.enabled: false
+spring.cloud.stream.defaultBinder: kafka
+spring.kafka.bootstrap-servers: kafka:9092
+spring.cloud.stream.kafka.binder.replication-factor: 1
+

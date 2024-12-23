@@ -23,6 +23,8 @@ public class GatewayAppConfigs {
 		this.eureka_username = eureka_username;
 		this.eureka_password = eureka_password;
 		this.eureka_server = eureka_server;
+		
+		LOG.info("Eureka info loaded from configs -- host: {} -|- username password: {}/{}", eureka_server, eureka_username, eureka_password);
 	}
 	
 	
@@ -35,11 +37,27 @@ public class GatewayAppConfigs {
 		
 		return WebClient.builder()
 				.filter((request, next) -> {
+					String requestInfo = request.method().toString() + "/ " + request.url() + " Headers: " + request.headers();
+					String requestBody = request.toString();
+					
 					String host = UriComponentsBuilder.fromUri(request.url())
 							.build()
 							.getHost();
 					
-					LOG.info("Resolved host from url is: {}", host);
+					String path = UriComponentsBuilder.fromUri(request.url())
+					.build().getPath();
+					
+					int port = UriComponentsBuilder.fromUri(request.url())
+							.build().getPort();
+					
+					String schem = UriComponentsBuilder.fromUri(request.url())
+							.build().getScheme();
+					
+					String userInfo = UriComponentsBuilder.fromUri(request.url())
+							.build().getUserInfo();
+					
+					LOG.info("Resolved scheme, host, path from url is: {}://{}:{}{}", schem, host, port, path);
+					LOG.info("User info: {}\nRequest url: {}\nRequest body: {}", userInfo, requestInfo, requestBody);
 					
 					if (host != null && host.equals(this.eureka_server)) {	// System.getenv("app.eureka-server")
 						return next.exchange(

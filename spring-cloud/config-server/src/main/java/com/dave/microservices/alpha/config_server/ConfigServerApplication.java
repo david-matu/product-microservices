@@ -13,10 +13,16 @@ public class ConfigServerApplication {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ConfigServerApplication.class);
 	
+	
 	public static void main(String[] args) {
 		ConfigurableApplicationContext ctx = SpringApplication.run(ConfigServerApplication.class, args);
 		
 		String repoLocation = ctx.getEnvironment().getProperty("spring.cloud.config.server.native.searchLocations");
+		
+		String username = ctx.getEnvironment().getProperty("spring.security.user-name");
+		String password = ctx.getEnvironment().getProperty("spring.security.user-password");
+		
+		LOG.info("Username and password in environment: {}/{}", username, password);
 		
 		LOG.info("Serving configurations from directory: {}", repoLocation);
 	}

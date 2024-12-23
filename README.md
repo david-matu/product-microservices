@@ -155,7 +155,18 @@ curl --location 'https://localhost:8443/product-composite' \
 ___
 Moving to next subject: centralized configuration. That will likely fall into another branch. See you soon
 
+___
 
+#### Centralized Configuration
+> Dec 22, 2024
+
+In this sprint, a __config server__ has been added to the landscape, all application configs moved to a central repo.
+
+
+The __config server__ uses the _config-repo_ directory as its repository. To view configs returned for each microservice, use the following example curl request:
+```cmd
+curl --location 'http://user:pwd@localhost:8888/gateway/default'
+```
 
 
 

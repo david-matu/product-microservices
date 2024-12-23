@@ -1,0 +1,109 @@
+spring:
+ application.name: review
+ # Set the following property to "none" or "validate" in a prod environment
+ jpa:
+  hibernate:
+   ddl-auto: update
+  
+  properties: 
+   hibernate:
+    dialect: org.hibernate.dialect.MySQLDialect
+    boot.allow_jdbc_metadata_access: false
+   
+ datasource:
+  url: jdbc:mysql://localhost/review_db
+  username: user
+  password: mypwd
+  # Wait for 60 seconds during startup to establish db connection
+  hikari.initializationFailTimeout: 60000
+ 
+server:
+ port: 7003
+ error.include-message: always
+
+# in common config: application.yml
+# app.eureka-server: localhost 
+# app.eureka-username: user
+# app.eureka-password: pwd
+
+# eureka:
+#  client:
+#   serviceUrl:
+#    defaultZone: http://${app.eureka-username}:${app.eureka-password}@${app.eureka-server}:8761/eureka/
+#    initialInstanceInfoReplicationIntervalSeconds: 5
+#    registryFetchIntervalSeconds: 5
+   
+#   instance:
+#    leaseRenewalIntervalInSeconds: 5
+#    leaseExpirationDurationInSeconds: 5
+
+logging:
+ level:
+  root: INFO
+  com.david.microservices.alpha: DEBUG
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+spring.cloud.function.definition: messageProcessor
+
+spring.cloud.stream:
+ defaultBinder: rabbit
+ default.contentType: application/json
+ bindings.messageProcessor-in-0:
+  destination: reviews
+  group: auditGroup
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer:
+ maxAttempts: 3
+ backOffInitialInterval: 500
+ backOffMaxInterval: 1000
+ backOffMultiplier: 2.0
+
+spring.cloud.stream.rabbit.bindings.messageProcessor-in-0.consumer:
+ autoBindDlq: true
+ republishToDlq: true
+
+# in common config: application.yml
+# spring.rabbitmq:
+#  host: 127.0.0.1
+#  port: 5672
+#  username: guest
+#  password: guest
+ 
+---
+spring:
+ config.activate.on-profile: docker
+ 
+ datasource.url: jdbc:mysql://mysql/review_db
+ 
+spring.rabbitmq.host: rabbitmq
+
+# spring.cloud.stream.kafka.binders.brokers: kafka
+
+server.port: 8080
+
+---
+spring.config.activate.on-profile: streaming_partitioned
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer:
+  partitioned: true
+  instanceCount: 2
+
+---
+spring.config.activate.on-profile: streaming_instance_0
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer.instanceIndex: 0
+
+---
+spring.config.activate.on-profile: streaming_instance_1
+
+spring.cloud.stream.bindings.messageProcessor-in-0.consumer.instanceIndex: 1
+
+---
+spring.config.activate.on-profile: kafka
+
+management.health.rabbit.enabled: false
+spring.cloud.stream.defaultBinder: kafka
+spring.kafka.bootstrap-servers: kafka:9092
+spring.cloud.stream.kafka.binder.replication-factor: 1
+

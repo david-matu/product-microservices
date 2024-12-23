@@ -43,6 +43,10 @@ dependencies {
 	
 	// ----- ^ Dec 3
 	
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.retry:spring-retry'
+	// ..... ^ Dec 15
+	
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
 	// testImplementation 'org.springframework.cloud:spring-cloud-stream::test-binder'
 	
