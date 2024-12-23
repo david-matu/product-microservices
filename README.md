@@ -169,4 +169,11 @@ curl --location 'http://user:pwd@localhost:8888/gateway/default'
 ```
 
 
+To protect sensitive information (like passwords) at rest, use the following example request to the config server for encrypting the values:
+```cmd
+curl --location 'http://user:pwd@localhost:8888/encrypt' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'pwd='
+```
+
 
