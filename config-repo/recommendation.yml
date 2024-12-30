@@ -39,7 +39,7 @@ spring.cloud.stream.rabbit.bindings.messageProcessor-0-consumer:
 logging:
  level:
   root: INFO
-  com.david.microservices.alpha: DEBUG
+  com.david.microservices.alpha: INFO
   org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 
 management.endpoint.health.show-details: "ALWAYS"

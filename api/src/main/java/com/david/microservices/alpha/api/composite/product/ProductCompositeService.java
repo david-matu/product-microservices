@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,6 +26,11 @@ public interface ProductCompositeService {
 	 * 
 	 */
 	
+	/*
+	 * Improving Resilience: Add programmable delays and errors
+	 *	 
+	 */
+	
 	@Operation(
 			summary = "${api.product-composite.get-composite-product.description}",
 			description = "${api.product-composite.get-composite-product.notes}")
@@ -35,8 +41,9 @@ public interface ProductCompositeService {
 			@ApiResponse(responseCode = "422", description = "${api.responseCodes.unprocessableEntity.description}")
 	})
 	@GetMapping(value = "/product-composite/{productId}", produces = "application/json")
-	Mono<ProductAggregate> getProduct(@PathVariable int productId);
-	
+	Mono<ProductAggregate> getProduct(@PathVariable int productId, @RequestParam(value = "delay", required = false, defaultValue = "0") int delay, 
+			@RequestParam(value = "faultPercent", required = false, defaultValue = "0") int faultPercent);
+	// Mono<ProductAggregate> getProduct(@PathVariable int productId);
 	
 	@Operation(summary = "${api.product-composite.create-composite-product.description}", description = "${api.product-composite.create-composite-product.notes}")
 	@ApiResponses(value = {

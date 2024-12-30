@@ -6,6 +6,7 @@ import static com.david.microservices.alpha.api.event.Event.Type.CREATE;
 import static com.david.microservices.alpha.api.event.Event.Type.DELETE;
 
 import java.io.IOException;
+import java.net.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.david.microservices.alpha.api.core.product.Product;
 import com.david.microservices.alpha.api.core.product.ProductService;
@@ -31,8 +33,13 @@ import com.david.microservices.alpha.api.event.Event;
 import com.david.microservices.alpha.api.exceptions.InvalidInputException;
 import com.david.microservices.alpha.api.exceptions.NotFoundException;
 import com.david.microservices.alpha.util.http.HttpErrorInfo;
+import com.david.microservices.alpha.util.http.ServiceUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
@@ -57,6 +64,8 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 	private final StreamBridge streamBridge;
 	private final Scheduler publishEventScheduler;
 	
+	private final ServiceUtil serviceUtil;
+	
 	@Autowired
 	public ProductCompositeIntegration(
 			@Qualifier("publishEventScheduler") Scheduler publishEventScheduler,
@@ -79,7 +88,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 			String reviewServiceHost, 
 			
 			@Value("${app.review-service.port}") 
-			String reviewServicePort) {
+			String reviewServicePort, ServiceUtil serviceUtil) {
 		
 		this.publishEventScheduler = publishEventScheduler;
 		this.webClient = webClient.build();
@@ -94,17 +103,35 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
 		
 		this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/reviews?productId=";
 		this.reviewServiceBaseUrl = "http://" + reviewServiceHost + ":" + reviewServicePort;
+		this.serviceUtil = serviceUtil;
 	}
-
+	
+	
 	@Override
-	public Mono<Product> getProduct(int productId) {
+	@Retry(name = "product")
+	@TimeLimiter(name = "product")
+	@CircuitBreaker(name = "product", fallbackMethod = "getProductFallbackValue")
+	public Mono<Product> getProduct(int productId, int delay, int faultPercent) {
 		
-		String url = productServiceUrl + "/" + productId;
+		//String url = productServiceUrl + "/" + productId;
+		
+		URI url = UriComponentsBuilder.fromUriString(productServiceUrl + "/{productId}?delay={delay}&faultPercent={faultPercent}")
+					.build(productId, delay, faultPercent);
 		
 		LOG.debug("Will call getProduct API on URL: {}", url);
 		return webClient.get().uri(url).retrieve().bodyToMono(Product.class)
 				.log(LOG.getName(), FINE)
 				.onErrorMap(WebClientResponseException.class, ex -> handleException(ex));
+	}
+	
+	private Mono<Product> getProductFallbackValue(int productId, int delay, int faultPercent, CallNotPermittedException ex) {
+		if (productId == 13) {
+			String errMsg = "Product Id: " + productId + " not found in fallback cache!";
+			
+			throw new NotFoundException(errMsg);
+		}
+		
+		return Mono.just(new Product(productId, "Fallback product" + productId, productId, serviceUtil.getServiceAddress()));
 	}
 	
 	private Throwable handleException(Throwable ex) {

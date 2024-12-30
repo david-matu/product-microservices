@@ -40,7 +40,7 @@ server:
 logging:
  level:
   root: INFO
-  com.david.microservices.alpha: DEBUG
+  com.david.microservices.alpha: INFO
   org.hibernate.SQL: DEBUG
   org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 

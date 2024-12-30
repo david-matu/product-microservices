@@ -177,3 +177,47 @@ curl --location 'http://user:pwd@localhost:8888/encrypt' \
 ```
 
 
+---
+
+#### Resilience with Resilience4j
+> Dec 23, 2024
+
+##### Circuit Breaker
+
+* __slidingWindowType__: counts most recent events to make a decision. Can be based on fixed no. of calls or fixed elapsed time. We go with _COUNT_BASED_
+* __slidingWindowSize__: the number of calls in closed state that will be used to determine if circuit should be opened. Set to _5_
+* __failureRateThreshold__: threshold (in %) for failed calls that will cause circuit to be opened. Set to _50%_
+* __automaticTransitionFromOpenToHalfOpenEnabled__: set to true
+* __waitDurationInOpenState__: how long the circuit stays open before transitioning to half-open state. Set to _10000 ms_ (10 seconds)
+
+
+With the last two parameters, the circuit breaker will keep the circuit open for 10 seconds and then transition to the half-open state
+
+* __permittedNumberOfCallsInHalfOpenState__ set to _3_. This means that if two of those requests or all the three fail, the _failureRateThreshold_ rate of 50% would cause the circuit be opened. Otherwise it will be closed.
+
+* __ignoreExceptions__: specify exceptions that should not be counted as faults i.e. business exceptions e.g. not found, invalid input
+
+* __registerHealthIndicator__: set to _true_
+
+* __allowHealthIndicatorToFail__: set to _false_. When false, the health endpoint will still report as "UP" even if on of the components of the circuit breaker are in half-open state
+
+##### Time Limiter
+Time limiter helps circuit breaker handle slow or unresponsive services
+
+* __timeoutDuration__: specifies how long a _TimeLimiter_ instance waits for a call to complete before it throws a timeout exception. Set to 2s
+
+##### Retry Mechanism
+Useful for random and infrequent faults like temporary network glitches. The services to be retried must be __indempotent__. 
+Use the following parameters to configure retry mechanisms:
+
+* __maxAttempts__: number of attempts before giving up (includes first call). Set to __3__. That means, maximum of 2 retry attempts after initial failed call 
+
+* __waitDuration__: set _1000 ms_ - wait 1 second between retries
+
+* __retryExceptions__: list of exceptions that will trigger retries. _InternalServerError_ 
+
+> Be thoughtful when setting circuit breaker and retry mechanisms such that _the circuit breaker doesn't open the circuit before the intended number of retries have been completed_
+
+
+
+

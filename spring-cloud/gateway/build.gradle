@@ -44,6 +44,11 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
 	// ..... ^ Dec 16
 	
+	// Distributed Tracing with Micrometer and Zipkin
+	implementation "io.micrometer:micrometer-tracing-bridge-otel"
+	implementation "io.opentelemetry:opentelemetry-exporter-zipkin"
+	// ..... ^ Dec 28
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

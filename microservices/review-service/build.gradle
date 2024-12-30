@@ -54,6 +54,12 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
 	// ..... ^ Dec 22
 	
+	// Distributed Tracing with Micrometer and Zipkin
+	implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+	implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
+	implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:1.0.0'
+	// ..... ^ Dec 28
+	
 	compileOnly("org.mapstruct:mapstruct-processor:${mapstructVersion}")
 	annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")

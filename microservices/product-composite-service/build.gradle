@@ -10,6 +10,11 @@ version = '1.0.0-SNAPSHOT'
 ext {
 	// springCloudVersion = "2022.0.1"
 	springCloudVersion = "2023.0.3"
+	resilience4jVersion = "2.0.2"
+}
+
+springBoot {
+	buildInfo()
 }
 
 java {
@@ -40,12 +45,26 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-oauth2-resource-server'
 	implementation 'org.springframework.security:spring-security-oauth2-jose'
-	
 	// ----- ^ Dec 3
 	
+	// Centralized configuration
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.retry:spring-retry'
 	// ..... ^ Dec 15
+	
+	// Resilience with Resilience4j
+	implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jVersion}"
+	implementation "io.github.resilience4j:resilience4j-reactor:${resilience4jVersion}"
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
+	// ..... ^ Dec 27
+	
+	// Distributed Tracing with Micrometer and Zipkin
+	implementation "io.micrometer:micrometer-tracing-bridge-otel"
+	implementation "io.opentelemetry:opentelemetry-exporter-zipkin"
+	
+	// Add this to support ReactorLoadBalancerExchangeFilterFunction
+	implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+	// ..... ^ Dec 28
 	
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
 	// testImplementation 'org.springframework.cloud:spring-cloud-stream::test-binder'
@@ -58,6 +77,7 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "io.github.resilience4j:resilience4j-bom:${resilience4jVersion}"
 	}
 }
 
