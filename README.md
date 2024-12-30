@@ -219,5 +219,21 @@ Use the following parameters to configure retry mechanisms:
 > Be thoughtful when setting circuit breaker and retry mechanisms such that _the circuit breaker doesn't open the circuit before the intended number of retries have been completed_
 
 
+##### Distributed Tracing
+Using __Micrometer__ and __Zipkin__
+
+> Completed on Dec 29, 2024
+
+
+In this chapter, we need to follow a request that gets served by a number of microservices. To achieve this task, we use __Micrometer__ to add TraceIDs to requests and responses such that they are shipped to __Zipkin__ which is able to arrange the flow of the requests in order and visualize.
+
+
+Trigger requests and follow with the Zipkin interface:
+
+[http://localhost:9411/zipkin/](http://localhost:9411/zipkin/)
+
+
+
+
 
 
